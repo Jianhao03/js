@@ -16,6 +16,7 @@ class dungeon_fruit_map_3 extends Phaser.Scene {
     this.load.image("fruitimg", "assets/smallpixel.png");
     this.load.spritesheet('knight', 'assets/knight.png',{ frameWidth:64, frameHeight:64 });
     this.load.spritesheet('mango', 'assets/mangopixel.png',{ frameWidth:32, frameHeight:32 });
+    this.load.audio("applepay", "assets/applepay.mp3");
     //this.load.spritesheet("fire", "assets/fire.png", {
       //frameWidth: 40,
       //frameHeight: 70,
@@ -25,6 +26,8 @@ class dungeon_fruit_map_3 extends Phaser.Scene {
 
   create() {
     console.log("animationScene");
+
+    this.applepaySnd = this.sound.add("applepay");
 
     //this.anims.create({
      /// key: "slow frame",
@@ -150,11 +153,13 @@ class dungeon_fruit_map_3 extends Phaser.Scene {
     // make the camera follow the player
     this.cameras.main.startFollow(this.player);
 
+//mango object//
     let mango = map.findObject("objectLayer", (obj) => obj.name === "mango");
   
       this.mango = this.physics.add.sprite(mango.x, mango.y, "mango")
 
       this.physics.add.overlap(this.player, this.mango, this.hitFruit, null, this);
+      //end of mango object//
   } // end of create //
 
   update() {
@@ -186,10 +191,10 @@ class dungeon_fruit_map_3 extends Phaser.Scene {
     }
   } // end of update //
 
-   //call this function when overlap
 //fruit//
 hitFruit(player,item) {
   console.log("hitFruit")
+  this.applepaySnd.play()
  // this.camera.main.shake(500)// 500ms
  //(player knockback) player.x = player.x - 50
   item.disableBody(true,true)

@@ -14,15 +14,25 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
     this.load.image("castleimg", "assets/Castle2.png");
     this.load.spritesheet('knight', 'assets/knight.png',{ frameWidth:64, frameHeight:64 });
     this.load.spritesheet('strawberry', 'assets/strawberry.png',{ frameWidth:32, frameHeight:32 });
+    this.load.spritesheet("enemy01", "assets/zombie.png",{ frameWidth:64, frameHeight:64 });
+    this.load.spritesheet("enemy02", "assets/zombie.png",{ frameWidth:64, frameHeight:64 });
+    this.load.spritesheet("enemy03", "assets/zombie.png",{ frameWidth:64, frameHeight:64 });
+    this.load.spritesheet("enemy04", "assets/zombie.png",{ frameWidth:64, frameHeight:64 });
+    this.load.spritesheet("enemy05", "assets/zombie.png",{ frameWidth:64, frameHeight:64 });
+    this.load.spritesheet("enemy06", "assets/zombie.png",{ frameWidth:64, frameHeight:64 });
+    this.load.audio("applepay", "assets/applepay.mp3");
+    this.load.audio("mchurt", "assets/mchurt.mp3")
     //this.load.spritesheet("fire", "assets/fire.png", {
       //frameWidth: 40,
       //frameHeight: 70,
    // });
-    //this.load.spritesheet("zombie", "assets/enemy01.png",{ frameWidth:64, frameHeight:64 });
   } // end of preload //
 
   create() {
     console.log("animationScene");
+
+    this.applepaySnd = this.sound.add("applepay");
+    this.mchurtSnd = this.sound.add("mchurt");
 
     //this.anims.create({
      /// key: "slow frame",
@@ -155,6 +165,55 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
     // make the camera follow the player
     this.cameras.main.startFollow(this.player);
 
+     //enemy//
+     let zombie1 = map.findObject("enemyLayer", (obj) => obj.name === "enemy01");
+     //let zombie1 = map.findObject("enemyLayer", (obj) => obj.name === "enemy01, enemy04");
+    // let zombie2 = map.findObject("enemyLayer", (obj) => obj.name === "enemy02, enemy03, enemy06");
+    // let zombie3 = map.findObject("enemyLayer", (obj) => obj.name === "enemy05");
+
+    this.zombie1 = this.physics.add.sprite(zombie1.x, zombie1.y, "enemy01")
+// this.zombie1 = this.physics.add.sprite(zombie1.x, zombie1.y, "enemy01, enemy04")
+//this.zombie2 = this.physics.add.sprite(zombie2.x, zombie2.y, "enemy02, enemy03, enemy06")
+//this.zombie3 = this.physics.add.sprite(zombie3.x, zombie3.y, "enemy05")
+
+this.physics.add.overlap(this.player, [this.zombie1, this.zombie2, this.zombie3], this.hitEnemy, null, this);
+//this.physics.add.overlap(this.player, this.zombie, this.hitEnemy, null, this);
+// in create, add tweens 
+
+//zombie1// 
+this.tweens.add({  
+  targets: this.zombie1,
+  y: 100,
+ //flipX: true,
+  yoyo: true,
+  duration: 2000,
+  repeat: -1
+})
+//end of zombie1//
+
+//zombie2// 
+// this.tweens.add({  
+//   targets: this.zombie2,
+//   x: 100,
+//  //flipX: true,
+//   yoyo: true,
+//   duration: 2000,
+//   repeat: -1
+// })
+//end of zombie2//
+
+//zombie3// 
+// this.tweens.add({  
+//   targets: this.zombie3,
+//   x: 500,
+//  //flipX: true,
+//   yoyo: true,
+//   duration: 2000,
+//   repeat: -1
+// })
+//end of zombie3//
+
+//fruit//
     let strawberry = map.findObject("objectLayer", (obj) => obj.name === "strawberry");
   
       this.strawberry = this.physics.add.sprite(strawberry.x, strawberry.y, "strawberry")
@@ -190,25 +249,30 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
     }
   } // end of update //
 
-  //call this function when overlap
-//fruit//
+//call this function when overlap\
+
+   //enemy//
+   hitEnemy(player,item) {
+   console.log("hitEnemy")
+   this.mchurtSnd.play()
+  //this.camera.main.shake(500)// 500ms
+   //(player knockback) player.x = player.x - 50
+    item.disableBody(true,true)
+  
+   return false;
+  }
+
+  //fruit//
   hitFruit(player,item) {
     console.log("hitFruit")
-   // this.camera.main.shake(500)// 500ms
+    this.applepaySnd.play()
+   //this.camera.main.shake(500)// 500ms
    //(player knockback) player.x = player.x - 50
     item.disableBody(true,true)
 
    return false;
   }
 
-  //hitEnemy(player,item) {
-    //console.log("hitEnemy")
-    //this.camera.main.shake(500)// 500ms
-   //(player knockback) player.x = player.x - 50
-   // item.disableBody(true,true)
-
-   // return false;
- // }
   dungeon_fruit_map_2(player, tile) {
     console.log("dungeon_fruit_map_2 function");
     let playerPos = {};

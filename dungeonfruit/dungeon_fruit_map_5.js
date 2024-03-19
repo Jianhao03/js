@@ -16,6 +16,7 @@ class dungeon_fruit_map_5 extends Phaser.Scene {
     this.load.image("smallpixelimg", "assets/smallpixel.png");
     this.load.spritesheet('knight', 'assets/knight.png',{ frameWidth:64, frameHeight:64 });
     this.load.spritesheet('pineapple', 'assets/pineapplepixel.png',{ frameWidth:32, frameHeight:32 });
+    this.load.audio("applepay", "assets/applepay.mp3");
     //this.load.spritesheet("fire", "assets/fire.png", {
       //frameWidth: 40,
       //frameHeight: 70,
@@ -25,6 +26,8 @@ class dungeon_fruit_map_5 extends Phaser.Scene {
 
   create() {
     console.log("animationScene");
+
+    this.applepaySnd = this.sound.add("applepay");
 
     //this.anims.create({
      /// key: "slow frame",
@@ -188,6 +191,7 @@ class dungeon_fruit_map_5 extends Phaser.Scene {
 //fruit//
 hitFruit(player,item) {
   console.log("hitFruit")
+  this.applepaySnd.play()
  // this.camera.main.shake(500)// 500ms
  //(player knockback) player.x = player.x - 50
   item.disableBody(true,true)

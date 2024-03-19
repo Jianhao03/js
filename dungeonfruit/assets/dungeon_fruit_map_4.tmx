@@ -146,7 +146,7 @@
 </data>
  </layer>
  <objectgroup id="5" name="enemyLayer">
-  <object id="4" name="enemy06" x="671.5" y="359">
+  <object id="4" name="enemy06" x="510.167" y="369.667">
    <point/>
   </object>
   <object id="5" name="enemy05" x="63.5" y="70">
@@ -155,10 +155,10 @@
   <object id="6" name="enemy04" x="511.955" y="610.545">
    <point/>
   </object>
-  <object id="7" name="enemy03" x="833" y="909">
+  <object id="7" name="enemy03" x="793" y="910.333">
    <point/>
   </object>
-  <object id="8" name="enemy02" x="1280.03" y="737.531">
+  <object id="8" name="enemy02" x="1099.36" y="590.198">
    <point/>
   </object>
   <object id="9" name="enemy01" x="1199.5" y="165.5">
