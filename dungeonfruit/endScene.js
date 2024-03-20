@@ -5,6 +5,10 @@ class endScene extends Phaser.Scene {
         super('endScene');
     }
 
+    preload(){
+        this.load.image("end", "assets/endgamepage.png");
+    }
+
     create ()
     {
         let graphics = this.add.graphics();
