@@ -172,7 +172,18 @@ class dungeon_fruit_map_1 extends Phaser.Scene {
       this.player.setVelocity(0);
       this.player.anims.stop();
     }
-//entance of dungeon portal//
+
+    // Check for victory
+    if (
+      this.player.x < 48 &&
+      this.player.y < 447 &&
+      this.player.y > 322
+    ) {
+      console.log("victory");
+      this.scene.start("victory");
+    }
+
+    // Check for entrance to the next map
     if (
       this.player.x > 784 &&
       this.player.y < 540 &&
@@ -182,7 +193,15 @@ class dungeon_fruit_map_1 extends Phaser.Scene {
       this.dungeon_fruit_map_2();
     }
   } // end of update //
-  dungeon_fruit_map_2(player, tile) {
+
+  // Function to transition to the victory scene
+  dungeon_fruit_map_1() {
+    console.log("victory function");
+    this.scene.start("victory");
+  }
+
+  // Function to transition to the second map
+  dungeon_fruit_map_2() {
     console.log("dungeon_fruit_map_2 function");
     let playerPos = {};
     playerPos.x = 467;

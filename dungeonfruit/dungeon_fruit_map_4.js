@@ -1,11 +1,17 @@
 class dungeon_fruit_map_4 extends Phaser.Scene {
   constructor() {
     super({ key: "dungeon_fruit_map_4" });
+    this.hearts = [];
+    this.maxHearts = 3; // Set the maximum number of hearts
+    this.playerHearts = 3; // Initialize player's heart count
+    window.fruit = 0; // Initialize the fruit count
   }
 
+  // Initialize method to set the player data
   init(data) {
     this.player = data.player;
   }
+
   preload() {
     // Step 1, load JSON
     this.load.tilemapTiledJSON(
@@ -15,6 +21,7 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
     // Step 2 : Preload any images here
     this.load.image("buildimg", "assets/build_atlas.png");
     this.load.image("castleimg", "assets/Castle2.png");
+    this.load.image("heartimg", "assets/Heart.png");
     this.load.spritesheet("knight", "assets/knight.png", {
       frameWidth: 64,
       frameHeight: 64,
@@ -29,17 +36,26 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
     });
     this.load.audio("applepay", "assets/applepay.mp3");
     this.load.audio("mchurt", "assets/mchurt.mp3");
-    //this.load.spritesheet("fire", "assets/fire.png", {
-    //frameWidth: 40,
-    //frameHeight: 70,
-    // });
-  } // end of preload //
+  }// end of preload //
 
   create() {
     console.log("animationScene");
 
     this.applepaySnd = this.sound.add("applepay");
     this.mchurtSnd = this.sound.add("mchurt");
+
+    // Add hearts with adjusted offset
+    this.hearts = [];
+    for (let i = 0; i < this.maxHearts; i++) {
+      let heart = this.add
+        .image(50 + i * 60, 50, "heartimg")
+        .setScrollFactor(0)
+        .setScale(0.08)
+        .setDepth(1)
+        .setVisible(true);
+
+      this.hearts.push(heart);
+    }
 
     //this.anims.create({
     /// key: "slow frame",
@@ -133,89 +149,14 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
 
     //Step 3 - Create the map from main
     let map = this.make.tilemap({ key: "dungeon_fruit_map_4" });
-
-    // Step 4 Load the game tiles
-    // 1st parameter is name in Tiled,
-    // 2nd parameter is key in Preload
     let buildTiles = map.addTilesetImage("build_atlas", "buildimg");
     let castleTiles = map.addTilesetImage("Castle2", "castleimg");
-
-    //Step 5  create an array of tiles
     let tilesArray = [buildTiles, castleTiles];
 
-    // Step 6  Load in layers by layers
-
     this.roadLayer = map.createLayer("road", tilesArray, 0, 0);
-
     this.wallLayer = map.createLayer("wall", tilesArray, 0, 0);
-
     this.stuffLayer = map.createLayer("stuff", tilesArray, 0, 0);
-
     this.fruit_placeLayer = map.createLayer("fruit_place", tilesArray, 0, 0);
-
-    console.log("This is preloadScene spacebar V3");
-
-    var spaceDown = this.input.keyboard.addKey("SPACE");
-
-    spaceDown.on(
-      "down",
-      function () {
-        console.log("Space pressed, goto dungeon_fruit_map_5");
-        this.scene.start("dungeon_fruit_map_4");
-      },
-      this
-    );
-
-    var key1Down = this.input.keyboard.addKey(49);
-    var key2Down = this.input.keyboard.addKey(50);
-    var key3Down = this.input.keyboard.addKey(51);
-    var key4Down = this.input.keyboard.addKey(52);
-    var key5Down = this.input.keyboard.addKey(53);
-
-    key1Down.on(
-      "down",
-      function () {
-        console.log("Key 1 pressed");
-        this.scene.start("dungeon_fruit_map_1");
-      },
-      this
-    );
-
-    key2Down.on(
-      "down",
-      function () {
-        console.log("Key 2 pressed");
-        this.scene.start("dungeon_fruit_map_2");
-      },
-      this
-    );
-
-    key3Down.on(
-      "down",
-      function () {
-        console.log("Key 3 pressed");
-        this.scene.start("dungeon_fruit_map_3");
-      },
-      this
-    );
-
-    key4Down.on(
-      "down",
-      function () {
-        console.log("Key 4 pressed");
-        this.scene.start("dungeon_fruit_map_4");
-      },
-      this
-    );
-
-    key5Down.on(
-      "down",
-      function () {
-        console.log("Key 5 pressed");
-        this.scene.start("dungeon_fruit_map_5");
-      },
-      this
-    );
 
     //object enemy layer
     //let enemy01 =map.findObject("enemyLayer", (obj) => obj.name === "enemy01");
@@ -233,38 +174,69 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
 
     // Add time event / movement here
 
+    // Add player and configure physics
     this.player = this.physics.add.sprite(101, 788, "knight");
-    window.player = this.player;
-    this.player.body
-      .setSize(this.player.width * 0.5, this.player.height * 0.4)
-      .setOffset(18, 34);
+    this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.4).setOffset(18, 34);
+
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.wallLayer.setCollisionByExclusion(-1, true);
-    this.physics.add.collider(this.player, this.wallLayer);
+   // Set collisions
+   this.wallLayer.setCollisionByExclusion(-1, true);
+   this.physics.add.collider(this.player, this.wallLayer);
+   this.stuffLayer.setCollisionByExclusion(-1, true);
+   this.physics.add.collider(this.player, this.stuffLayer);
 
-    this.stuffLayer.setCollisionByExclusion(-1, true);
-    this.physics.add.collider(this.player, this.stuffLayer);
-    // make the camera follow the player
+    // Camera settings
     this.cameras.main.startFollow(this.player);
+
+    //end of player//
 
     //enemy//
     let zombie1 = map.findObject("enemyLayer", (obj) => obj.name === "enemy01");
+    let zombie2 = map.findObject("enemyLayer", (obj) => obj.name === "enemy02");
+    let zombie3 = map.findObject("enemyLayer", (obj) => obj.name === "enemy03");
+    let zombie4 = map.findObject("enemyLayer", (obj) => obj.name === "enemy04");
+    let zombie5 = map.findObject("enemyLayer", (obj) => obj.name === "enemy05");
+    let zombie6 = map.findObject("enemyLayer", (obj) => obj.name === "enemy06");
+
     //let zombie1 = map.findObject("enemyLayer", (obj) => obj.name === "enemy01, enemy04");
     // let zombie2 = map.findObject("enemyLayer", (obj) => obj.name === "enemy02, enemy03, enemy06");
     // let zombie3 = map.findObject("enemyLayer", (obj) => obj.name === "enemy05");
-
-    this.zombie1 = this.physics.add
-      .sprite(zombie1.x, zombie1.y, "enemy01")
-      .play("zombie-down");
+  
+    if (zombie1 && zombie2 && zombie3 && zombie4 && zombie5 && zombie6) {
+      this.zombie1 = this.physics.add.sprite(zombie1.x, zombie1.y, "zombie").play("zombie-down");
+      this.zombie2 = this.physics.add.sprite(zombie2.x, zombie2.y, "zombie").play("zombie-right");
+      this.zombie3 = this.physics.add.sprite(zombie3.x, zombie3.y, "zombie").play("zombie-right");
+      this.zombie4 = this.physics.add.sprite(zombie4.x, zombie4.y, "zombie").play("zombie-down");
+      this.zombie5 = this.physics.add.sprite(zombie5.x, zombie5.y, "zombie").play("zombie-right");
+      this.zombie6 = this.physics.add.sprite(zombie6.x, zombie6.y, "zombie").play("zombie-right");
+    
+      // Add physics bodies
+      this.physics.add.existing(this.zombie1);
+      this.physics.add.existing(this.zombie2);
+      this.physics.add.existing(this.zombie3);
+      this.physics.add.existing(this.zombie4);
+      this.physics.add.existing(this.zombie5);
+      this.physics.add.existing(this.zombie6);
+    
+      // Set offset for each zombie body
+      this.zombie1.body.setSize(this.zombie1.width * 0.5, this.zombie1.height * 0.4).setOffset(18, 34);
+      this.zombie2.body.setSize(this.zombie2.width * 0.5, this.zombie2.height * 0.4).setOffset(18, 34);
+      this.zombie3.body.setSize(this.zombie3.width * 0.5, this.zombie3.height * 0.4).setOffset(18, 34);
+      this.zombie4.body.setSize(this.zombie4.width * 0.5, this.zombie4.height * 0.4).setOffset(18, 34);
+      this.zombie5.body.setSize(this.zombie5.width * 0.5, this.zombie5.height * 0.4).setOffset(18, 34);
+      this.zombie6.body.setSize(this.zombie6.width * 0.5, this.zombie6.height * 0.4).setOffset(18, 34);
+    } else {
+      console.error("One or more zombie objects not found in the Tiled map.");
+    }
     // this.zombie1 = this.physics.add.sprite(zombie1.x, zombie1.y, "enemy01, enemy04")
     //this.zombie2 = this.physics.add.sprite(zombie2.x, zombie2.y, "enemy02, enemy03, enemy06")
     //this.zombie3 = this.physics.add.sprite(zombie3.x, zombie3.y, "enemy05")
 
     this.physics.add.overlap(
       this.player,
-      [this.zombie1, this.zombie2, this.zombie3],
+      [this.zombie1, this.zombie2, this.zombie3, this.zombie4, this.zombie5,  this.zombie6],
       this.hitZombie,
       null,
       this
@@ -293,26 +265,104 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
     //end of zombie1//
 
     //zombie2//
-    // this.tweens.add({
-    //   targets: this.zombie2,
-    //   x: 100,
-    //  //flipX: true,
-    //   yoyo: true,
-    //   duration: 2000,
-    //   repeat: -1
-    // })
+    this.tweens.add({
+      targets: this.zombie2,
+      x: 1374,
+      flipX: false,
+      yoyo: true,
+      duration: 5000,
+      repeat: -1,
+
+      onYoyo: () => {
+        console.log("onYoyo");
+        this.zombie2.play("zombie-left");
+      },
+      onRepeat: () => {
+        console.log("onRepeat");
+        this.zombie2.play("zombie-right");
+      },
+    });
     //end of zombie2//
 
-    //zombie3//
-    // this.tweens.add({
-    //   targets: this.zombie3,
-    //   x: 500,
-    //  //flipX: true,
-    //   yoyo: true,
-    //   duration: 2000,
-    //   repeat: -1
-    // })
+     //zombie3//
+     this.tweens.add({
+      targets: this.zombie3,
+      x: 1374,
+      flipX: false,
+      yoyo: true,
+      duration: 5000,
+      repeat: -1,
+
+      onYoyo: () => {
+        console.log("onYoyo");
+        this.zombie3.play("zombie-left");
+      },
+      onRepeat: () => {
+        console.log("onRepeat");
+        this.zombie3.play("zombie-right");
+      },
+    });
     //end of zombie3//
+
+    //zombie4//
+    this.tweens.add({
+      targets: this.zombie4,
+      y: 732,
+      flipY: false,
+      yoyo: true,
+      duration: 6000,
+      repeat: -1,
+
+      onYoyo: () => {
+        console.log("onYoyo");
+        this.zombie4.play("zombie-up");
+      },
+      onRepeat: () => {
+        console.log("onRepeat");
+        this.zombie4.play("zombie-down");
+      },
+    });
+    //end of zombie4//
+
+    //zombie5//
+    this.tweens.add({
+      targets: this.zombie5,
+      x: 761,
+      flipX: false,
+      yoyo: true,
+      duration: 4000,
+      repeat: -1,
+
+      onYoyo: () => {
+        console.log("onYoyo");
+        this.zombie5.play("zombie-left");
+      },
+      onRepeat: () => {
+        console.log("onRepeat");
+        this.zombie5.play("zombie-right");
+      },
+    });
+    //end of zombie5//
+
+     //zombie6//
+     this.tweens.add({
+      targets: this.zombie6,
+      x: 931,
+      flipX: false,
+      yoyo: true,
+      duration: 5000,
+      repeat: -1,
+
+      onYoyo: () => {
+        console.log("onYoyo");
+        this.zombie6.play("zombie-left");
+      },
+      onRepeat: () => {
+        console.log("onRepeat");
+        this.zombie6.play("zombie-right");
+      },
+    });
+    //end of zombie6//
 
     //fruit//
     let strawberry = map.findObject(
@@ -326,13 +376,9 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
       "strawberry"
     );
 
-    this.physics.add.overlap(
-      this.player,
-      this.strawberry,
-      this.hitFruit,
-      null,
-      this
-    );
+// Inside create method or wherever you set up collisions
+this.physics.add.overlap(this.player, this.strawberry, this.hitFruit, null, this);
+    //end of fruit//
 
     //fog of wall
     this.wallLayer.setPipeline("Light2D").setAlpha(0.3);
@@ -346,64 +392,137 @@ class dungeon_fruit_map_4 extends Phaser.Scene {
       .addLight(this.player.x, this.player.y)
       .setRadius(200, 200)
       .setIntensity(10);
+//end fog of wall//
+
+// Initialize player health
+    this.playerHealth = 3; // Assuming the player starts with 3 health points
+        
+//exit//
+        this.exitPortal = this.physics.add.sprite(442, 223, "exitPortalSprite");
+        this.physics.add.overlap(this.player, this.exitPortal, this.exitToMap2, null, this);
+
   } // end of create //
 
-  update() {
-    this.spotlight.x = this.player.x + 8;
-    this.spotlight.y = this.player.y - 5;
+  updateHearts() {
+    // Show or hide hearts based on player's health
+    for (let i = 0; i < this.maxHearts; i++) {
+        if (i < this.playerHearts) {
+            this.hearts[i].setVisible(true);
+        } else {
+            this.hearts[i].setVisible(false);
+        }
+    }
 
-    if (this.cursors.left.isDown) {
+    // Check for game over condition
+    if (this.playerHearts <= 0) {
+        this.scene.start("gameover"); // Transition to game over scene
+    }
+}
+
+update() {
+  // Update logic for the scene
+  this.spotlight.x = this.player.x + 8;
+  this.spotlight.y = this.player.y - 5;
+
+  // Handle player movement
+  if (this.cursors.left.isDown) {
       this.player.setVelocityX(-160);
       this.player.anims.play("knight-left", true);
-    } else if (this.cursors.right.isDown) {
+  } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play("knight-right", true);
-    } else if (this.cursors.up.isDown) {
+  } else if (this.cursors.up.isDown) {
       this.player.setVelocityY(-160);
       this.player.anims.play("knight-up", true);
-    } else if (this.cursors.down.isDown) {
+  } else if (this.cursors.down.isDown) {
       this.player.setVelocityY(160);
       this.player.anims.play("knight-down", true);
-    } else {
+  } else {
       this.player.setVelocity(0);
       this.player.anims.stop();
-    }
-    //exit from purple portal//
-    if (this.player.x < 63 && this.player.y > 764 && this.player.y < 838) {
-      console.log("Door4");
+  }
+
+    //exit to outside dungeon//
+    if (this.player.x > 46 && this.player.x < 80 && this.player.y > 760 && this.player.y < 840) {
+      // Call the method to transition to dungeon_fruit_map_2
       this.dungeon_fruit_map_2();
-    }
-  } // end of update //
+  }//end of exit to outside dungeon//
+
+}//end of update//
 
   //call this function when overlap\
 
   //enemy//
   hitZombie(player, item) {
-    console.log("hitZombie");
+    console.log("hitZombie function called");
     this.mchurtSnd.play();
     this.cameras.main.shake(500); // 500ms
     //(player knockback) player.x = player.x - 50
     item.disableBody(true, true);
 
-    return false;
-  }
+    // Reduce player hearts
+    this.playerHearts--;
 
-  //fruit//
-  hitFruit(player, item) {
-    console.log("hitFruit");
-    this.applepaySnd.play();
-    //this.camera.main.shake(500)// 500ms
-    //(player knockback) player.x = player.x - 50
-    item.disableBody(true, true);
+    // Update hearts display
+    this.updateHearts();
 
     return false;
   }
 
+//fruit//
+ // Inside the hitFruit method
+ hitFruit(player, item) {
+  console.log("hitFruit function called");
+  this.applepaySnd.play();
+
+  // Disable the collected fruit
+  item.disableBody(true, true);
+
+  return false;
+}
+
+// Method to handle transitioning between scenes
+ // Method to handle transitioning between scenes
+ transitionToNextScene(data) {
+  // Transition to the next scene and pass the data object
+  this.scene.start("dungeon_fruit_map_4", data);
+}
+
+// Initialize method to set the player data and global fruit count in each scene
+init(data) {
+  this.player = data.player;
+  // Retrieve the global fruit count from the scene data or initialize it if not provided
+  window.fruit = data.fruitCount || 0;
+}
+
+// dungeon_fruit_map_2(playerPos) {
+//   console.log("dungeon_fruit_map_2 function");
+//   console.log("Player position:", playerPos);
+//   this.scene.start("dungeon_fruit_map_2", { player: playerPos });
+// }
+    // Method to handle exiting to map 2
+  //outside dungeon//
   dungeon_fruit_map_2(player, tile) {
     console.log("dungeon_fruit_map_2 function");
     let playerPos = {};
-    playerPos.x = 446;
-    playerPos.y = 213;
-    this.scene.start("dungeon_fruit_map_2", { player: playerPos });
+    playerPos.x = 442;
+    playerPos.y = 212;
+    this.scene.start("dungeon_fruit_map_2",{player : playerPos});
+  }
+  //end of outside dungeon//
+    // //exit from purple portal
+    // dungeon_fruit_map_2(player, tile) {
+    //   console.log("Transitioning to dungeon_fruit_map_2");
+    
+    //   // Define the player's position in the next scene
+    //   const playerPos = { x: 704, y: 205 };
+    
+    //   // Transition to the next scene with the player's position data
+    //   this.scene.start("dungeon_fruit_map_2", { player: playerPos });
+    // }
+  gameOver() {
+    // Game over logic
+    console.log("gameover");
+    // You can show a game over screen or reset the level here
   }
 }

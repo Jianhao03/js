@@ -88,45 +88,6 @@ class dungeon_fruit_map_2 extends Phaser.Scene {
 
     this.yellow_portalLayer = map.createLayer("yellow_portal", tilesArray, 0, 0);
 
-    console.log("This is preloadScene spacebar V3");
-
-        var spaceDown = this.input.keyboard.addKey('SPACE');
-            
-            spaceDown.on('down', function(){
-            console.log("Space pressed, goto dungeon_fruit_map_3");
-            this.scene.start("dungeon_fruit_map_2");
-            }, this );
-    
-            var key1Down = this.input.keyboard.addKey(49);
-            var key2Down = this.input.keyboard.addKey(50);
-            var key3Down = this.input.keyboard.addKey(51);
-            var key4Down = this.input.keyboard.addKey(52);
-            var key5Down = this.input.keyboard.addKey(53);
-
-            key1Down.on('down', function(){
-                console.log("Key 1 pressed");
-                    this.scene.start("dungeon_fruit_map_1");
-                }, this );
-    
-                key2Down.on('down', function(){
-                    console.log("Key 2 pressed");
-                        this.scene.start("dungeon_fruit_map_2");
-                    }, this );
-    
-                    key3Down.on('down', function(){
-                      console.log("Key 3 pressed");
-                          this.scene.start("dungeon_fruit_map_3");
-                      }, this );
-
-                      key4Down.on('down', function(){
-                        console.log("Key 4 pressed");
-                            this.scene.start("dungeon_fruit_map_4");
-                        }, this );
-
-                        key5Down.on('down', function(){
-                            console.log("Key 5 pressed");
-                                this.scene.start("dungeon_fruit_map_5");
-                            }, this );
 
     //Add main player here with physics.add.sprite
 
@@ -199,9 +160,9 @@ class dungeon_fruit_map_2 extends Phaser.Scene {
 
     //potral blue//
     if (
-      this.player.x > 633 &&
-      this.player.x < 717 &&
-      this.player.y < 192
+      this.player.x > 663 &&
+      this.player.x < 751 &&
+      this.player.y < 195
     ) {
       console.log("blue_portal");
       this.dungeon_fruit_map_5();
@@ -243,9 +204,9 @@ class dungeon_fruit_map_2 extends Phaser.Scene {
  dungeon_fruit_map_5(player, tile) {
   console.log("dungeon_fruit_map_5 function");
   let playerPos = {};
-    playerPos.x = 675;
-    playerPos.y = 214;
-  this.scene.start("dungeon_fruit_map_5",{player : player});
+    playerPos.x = 429;
+    playerPos.y = 109;
+  this.scene.start("dungeon_fruit_map_5",{player : playerPos});
 }
 //end of potral blue//
 

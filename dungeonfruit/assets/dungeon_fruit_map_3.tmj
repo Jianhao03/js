@@ -134,6 +134,77 @@
         }, 
         {
          "draworder":"topdown",
+         "id":8,
+         "name":"enemyLayer",
+         "objects":[
+                {
+                 "height":0,
+                 "id":5,
+                 "name":"enemy05",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":302.334
+                }, 
+                {
+                 "height":0,
+                 "id":6,
+                 "name":"enemy04",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":274.167,
+                 "y":195.167
+                }, 
+                {
+                 "height":0,
+                 "id":7,
+                 "name":"enemy03",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":357.333,
+                 "y":300.667
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"enemy02",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":457.333,
+                 "y":192.833
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"enemy01",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":532.667,
+                 "y":296.667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":6,
          "name":"objectLayer",
          "objects":[
@@ -155,8 +226,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":4,
+ "nextlayerid":9,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -19,14 +19,17 @@ class preloadScene extends Phaser.Scene {
        // this.add.text(10,500, 'press space to continue', 
         //    { font: '24px Courier', fill: '#ffffff' });
 
-        var spaceDown = this.input.keyboard.addKey('SPACE');
+        var spaceDown = this.input.keyboard.addKey('ENTER');
 
-        spaceDown.on('down', function(){
-            let playerPos = {};
-            playerPos.x = 50;
-            playerPos.y = 408; // Changed from x to y, assuming it was a typo
-            this.scene.start("dungeon_fruit_map_1", { player: playerPos });
-        }, this); // Passing 'this' as the context to refer to the scene
+        spaceDown.on("down", function () {
+            console.log("storyline");
+            
+            this.scene.start("storyline");
+              },
+              this
+            );
+
+ 
          
         }
 
